@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script
+      src="https://kit.fontawesome.com/df74e34b8e.js"
+      crossorigin="anonymous"
+    ></script>
+    <title>ReadingPedia</title>
+  </head>
+  <body>
+    <!-- navbar -->
+    <nav class="navBar">
+      <div class="nav-menu">
+        <h2><a href="index.html">Reading Pedia</a></h2>
+        <h2><a href="genre.html">Genre</a></h2>
+      </div>
+      <div class="nav-account">
+        <div class="search-container">
+          <form action="search.html">
+            <input
+              type="text"
+              placeholder="Enter your keywords"
+              name="search"
+            />
+            <button class="search-button" type="submit" value="submit">
+              <i class="fas fa-search"></i>
+            </button>
+          </form>
+        </div>
+        <div class="account-container">
+          <a href="personal.html" class="personal-page"
+            ><i class="fas fa-user-alt"></i
+          ></a>
+          <a href="setting.html" class="account-setting"
+            ><i class="fas fa-cog"></i
+          ></a>
+        </div>
+      </div>
+    </nav>
+
+    <section class="sign-up-container">
+      <form action="#" class="sign-up-information">
+        <label for="fullName">Full Name: </label>
+        <input type="text" name="fullName" /><br /><br />
+
+        <label for="emailAddress">Email: </label>
+        <input type="email" name="email" /><br /><br />
+
+        <label for="verification">Verification Code: </label>
+        <input type="number" name="verification" /><br /><br />
+
+        <label for="nickName">Nickname: </label>
+        <input type="text" name="nickName" /><br /><br />
+
+        <label for="password">Password: </label>
+        <input type="password" name="password" /><br /><br />
+
+        <label for="confirmPassword">Confirm Password: </label>
+        <input type="password" name="confirmPassword" /><br /><br />
+
+        <input type="submit" value="Sign Up" />
+      </form>
+    </section>
+  </body>
+</html>
