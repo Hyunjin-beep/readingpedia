@@ -7,6 +7,7 @@
       src="https://kit.fontawesome.com/df74e34b8e.js"
       crossorigin="anonymous"
     ></script>
+    <link rel="stylesheet" href="../src/style.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ReadingPedia</title>
   </head>
@@ -14,22 +15,16 @@
     <!-- navbar -->
     <nav class="navBar">
       <div class="nav-menu">
-        <h2><a href="index.html">Reading Pedia</a></h2>
-        <h2><a href="genre.html">Genre</a></h2>
+        <span class="nav-home"><a href="index.html">Reading Pedia</a></span>
+        <span class="nav-genre"><a href="genre.html">Genre</a></span>
       </div>
       <div class="nav-account">
-        <div class="search-container">
-          <form action="search.html">
-            <input
-              type="text"
-              placeholder="Enter your keywords"
-              name="search"
-            />
-            <button class="search-button" type="submit" value="submit">
-              <i class="fas fa-search"></i>
-            </button>
-          </form>
-        </div>
+        <form action="search.html" class="search-container">
+          <input type="text" placeholder="Enter your keywords" name="search" />
+          <button class="search-button" type="submit" value="submit">
+            <i class="fas fa-search"></i>
+          </button>
+        </form>
         <div class="account-container">
           <a href="personal.html" class="personal-page"
             ><i class="fas fa-user-alt"></i
