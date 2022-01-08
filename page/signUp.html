@@ -8,28 +8,26 @@
       src="https://kit.fontawesome.com/df74e34b8e.js"
       crossorigin="anonymous"
     ></script>
+    <link rel="stylesheet" href="../src/style.css" />
     <title>ReadingPedia</title>
   </head>
+
   <body>
     <!-- navbar -->
     <nav class="navBar">
       <div class="nav-menu">
-        <h2><a href="index.html">Reading Pedia</a></h2>
-        <h2><a href="genre.html">Genre</a></h2>
+        <span class="nav-home"
+          ><a href="index.html" class="nav-home-a">Reading Pedia</a></span
+        >
+        <span class="nav-genre"><a href="genre.html">Genre</a></span>
       </div>
       <div class="nav-account">
-        <div class="search-container">
-          <form action="search.html">
-            <input
-              type="text"
-              placeholder="Enter your keywords"
-              name="search"
-            />
-            <button class="search-button" type="submit" value="submit">
-              <i class="fas fa-search"></i>
-            </button>
-          </form>
-        </div>
+        <form action="search.html" class="search-container">
+          <input type="text" placeholder="Enter your keywords" name="search" />
+          <button class="search-button" type="submit" value="submit">
+            <i class="fas fa-search"></i>
+          </button>
+        </form>
         <div class="account-container">
           <a href="personal.html" class="personal-page"
             ><i class="fas fa-user-alt"></i
@@ -41,25 +39,41 @@
       </div>
     </nav>
 
-    <section class="sign-up-container">
+    <section class="sign-up-container form-container">
       <form action="#" class="sign-up-information">
-        <label for="fullName">Full Name: </label>
-        <input type="text" name="fullName" /><br /><br />
+        <div class="forLabel"><label for="fullName">Full Name: </label></div>
+        <div class="forInput">
+          <input type="text" name="fullName" /><br /><br />
+        </div>
 
-        <label for="emailAddress">Email: </label>
-        <input type="email" name="email" /><br /><br />
+        <div class="forLabel"><label for="emailAddress">Email: </label></div>
+        <div class="forInput">
+          <input type="email" name="email" /><br /><br />
+        </div>
 
-        <label for="verification">Verification Code: </label>
-        <input type="number" name="verification" /><br /><br />
+        <div class="forLabel">
+          <label for="verification">Verification Code: </label>
+        </div>
+        <div class="forInput">
+          <input type="number" name="verification" /><br /><br />
+        </div>
 
-        <label for="nickName">Nickname: </label>
-        <input type="text" name="nickName" /><br /><br />
+        <div class="forLabel"><label for="nickName">Nickname: </label></div>
+        <div class="forInput">
+          <input type="text" name="nickName" /><br /><br />
+        </div>
 
-        <label for="password">Password: </label>
-        <input type="password" name="password" /><br /><br />
+        <div class="forLabel"><label for="password">Password: </label></div>
+        <div class="forInput">
+          <input type="password" name="password" /><br /><br />
+        </div>
 
-        <label for="confirmPassword">Confirm Password: </label>
-        <input type="password" name="confirmPassword" /><br /><br />
+        <div class="forLabel">
+          <label for="confirmPassword">Confirm Password: </label>
+        </div>
+        <div class="forInput">
+          <input type="password" name="confirmPassword" /><br /><br />
+        </div>
 
         <input type="submit" value="Sign Up" />
       </form>
