@@ -7,29 +7,34 @@
       src="https://kit.fontawesome.com/df74e34b8e.js"
       crossorigin="anonymous"
     ></script>
+    <link rel="stylesheet" href="../src/style.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ReadingPedia</title>
   </head>
+  <style>
+    body {
+      position: relative;
+
+      height: 100vh;
+    }
+  </style>
   <body>
     <!-- navbar -->
     <nav class="navBar">
       <div class="nav-menu">
-        <h2><a href="index.html">Reading Pedia</a></h2>
-        <h2><a href="genre.html">Genre</a></h2>
+        <span class="nav-home"
+          ><a href="index.html" class="nav-home-a">Reading Pedia</a></span
+        >
+        <span class="nav-genre"><a href="genre.html">Genre</a></span>
       </div>
+
       <div class="nav-account">
-        <div class="search-container">
-          <form action="search.html">
-            <input
-              type="text"
-              placeholder="Enter your keywords"
-              name="search"
-            />
-            <button class="search-button" type="submit" value="submit">
-              <i class="fas fa-search"></i>
-            </button>
-          </form>
-        </div>
+        <form action="search.html" class="search-container">
+          <input type="text" placeholder="Enter your keywords" name="search" />
+          <button class="search-button" type="submit" value="submit">
+            <i class="fas fa-search"></i>
+          </button>
+        </form>
         <div class="account-container">
           <a href="personal.html" class="personal-page"
             ><i class="fas fa-user-alt"></i
@@ -44,25 +49,38 @@
     <section class="manage-information">
       <ul class="user-information">
         <li class="user-information-item">
+          Nickname : <span class="user-nickname">Hyunjin</span>
+        </li>
+        <li class="user-information-item">
           Email : <span class="user-email">jhj@gmail.com</span>
         </li>
-        <li class="user-information-item">
-          <button class="user-infor-btn change-password">
-            <a href="#">Change Password</a>
+        <li class="user-information-item" style="margin-top: 3rem">
+          <button class="user-infor-btn change-infor">
+            <a href="#">Change My Information</a>
           </button>
         </li>
         <li class="user-information-item">
-          <button class="user-infor-btn change-nickname">
-            <a href="#">Change Nickname</a>
+          <button class="user-infor-btn logout"><a href="#">Logout</a></button>
+        </li>
+        <li class="user-information-item">
+          <button class="user-infor-btn reset">
+            <a href="#">Reset My Review</a>
           </button>
-        </li>
-        <li class="user-information-item">
-          <button class="user-infor-btn logout">Logout</button>
-        </li>
-        <li class="user-information-item">
-          <button class="user-infor-btn reset">Reset My Review</button>
         </li>
       </ul>
     </section>
+    <div class="custom-shape-divider-bottom-1641738998">
+      <svg
+        data-name="Layer 1"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 1200 120"
+        preserveAspectRatio="none"
+      >
+        <path
+          d="M1200 120L0 16.48 0 0 1200 0 1200 120z"
+          class="shape-fill"
+        ></path>
+      </svg>
+    </div>
   </body>
 </html>

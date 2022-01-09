@@ -8,28 +8,31 @@
       src="https://kit.fontawesome.com/df74e34b8e.js"
       crossorigin="anonymous"
     ></script>
+    <link rel="stylesheet" href="../src/style.css" />
     <title>ReadingPedia</title>
   </head>
+  <style>
+    body {
+      position: relative;
+      border-bottom: 1px solid transparent;
+    }
+  </style>
   <body>
     <!-- navbar -->
     <nav class="navBar">
       <div class="nav-menu">
-        <h2><a href="index.html">Reading Pedia</a></h2>
-        <h2><a href="genre.html">Genre</a></h2>
+        <span class="nav-home"
+          ><a href="index.html" class="nav-home-a">Reading Pedia</a></span
+        >
+        <span class="nav-genre"><a href="genre.html">Genre</a></span>
       </div>
       <div class="nav-account">
-        <div class="search-container">
-          <form action="search.html">
-            <input
-              type="text"
-              placeholder="Enter your keywords"
-              name="search"
-            />
-            <button class="search-button" type="submit" value="submit">
-              <i class="fas fa-search"></i>
-            </button>
-          </form>
-        </div>
+        <form action="search.html" class="search-container">
+          <input type="text" placeholder="Enter your keywords" name="search" />
+          <button class="search-button" type="submit" value="submit">
+            <i class="fas fa-search"></i>
+          </button>
+        </form>
         <div class="account-container">
           <a href="personal.html" class="personal-page"
             ><i class="fas fa-user-alt"></i
@@ -46,9 +49,10 @@
       <div class="book-detail-container">
         <div class="book-cover-img">
           <!-- img -->
+          <img src="../img/gonegirl.jpg" alt="" class="book-cover-myThoughts" />
         </div>
         <div class="book-metadata">
-          <span class="book-title">Harry Potter</span>
+          <span class="book-title-personal">Harry Potter</span>
           <span class="book-autho">J.K.Rolling</span>
           <p class="book-overview">
             Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean
@@ -77,6 +81,12 @@
 
     <section class="recommendation-container">
       <ul class="recommendations">
+        <li class="recommendation">
+          <a href="detail.html"
+            ><img src="../img/gonegirl.jpg" alt="" class="recommendation-cover"
+          /></a>
+        </li>
+        <li class="recommendation">123</li>
         <li class="recommendation">123</li>
         <li class="recommendation">123</li>
         <li class="recommendation">123</li>
@@ -89,5 +99,19 @@
         <li class="recommendation">123</li>
       </ul>
     </section>
+
+    <div class="custom-shape-divider-bottom-1641738998">
+      <svg
+        data-name="Layer 1"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 1200 120"
+        preserveAspectRatio="none"
+      >
+        <path
+          d="M1200 120L0 16.48 0 0 1200 0 1200 120z"
+          class="shape-fill"
+        ></path>
+      </svg>
+    </div>
   </body>
 </html>
