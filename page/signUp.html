@@ -8,6 +8,8 @@
       src="https://kit.fontawesome.com/df74e34b8e.js"
       crossorigin="anonymous"
     ></script>
+
+    <script type="module" src="../src/siginUp.js" defer></script>
     <link rel="stylesheet" href="../src/style.css" />
     <title>ReadingPedia</title>
   </head>
@@ -48,12 +50,12 @@
       <form action="#" class="sign-up-information">
         <div class="forLabel"><label for="fullName">Full Name: </label></div>
         <div class="forInput">
-          <input type="text" name="fullName" /><br /><br />
+          <input type="text" name="fullName" class="fullName" /><br /><br />
         </div>
 
         <div class="forLabel"><label for="emailAddress">Email: </label></div>
         <div class="forInput">
-          <input type="email" name="email" /><br /><br />
+          <input type="email" name="email" class="email" /><br /><br />
         </div>
 
         <div class="forLabel">
@@ -65,12 +67,12 @@
 
         <div class="forLabel"><label for="nickName">Nickname: </label></div>
         <div class="forInput">
-          <input type="text" name="nickName" /><br /><br />
+          <input type="text" name="nickName" class="nickName" /><br /><br />
         </div>
 
         <div class="forLabel"><label for="password">Password: </label></div>
         <div class="forInput">
-          <input type="password" name="password" /><br /><br />
+          <input type="password" name="password" class="password" /><br /><br />
         </div>
 
         <div class="forLabel">
@@ -80,7 +82,7 @@
           <input type="password" name="confirmPassword" /><br /><br />
         </div>
 
-        <input type="submit" value="Sign Up" />
+        <input type="submit" value="Sign Up" class="signUp" />
       </form>
     </section>
 
