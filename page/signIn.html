@@ -8,6 +8,7 @@
       crossorigin="anonymous"
     ></script>
     <link rel="stylesheet" href="../src/style.css" />
+    <script type="module" src="../src/signIn.js" defer></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ReadingPedia</title>
   </head>
@@ -46,17 +47,17 @@
 
     <section class="sign-in-container form-container">
       <form action="#" class="sign-in-information">
-        <div class="forLabel"><label for="nickName">Nickname: </label></div>
+        <div class="forLabel"><label for="email">Email: </label></div>
         <div class="forInput">
-          <input type="text" name="nickName" /><br /><br />
+          <input type="email" name="email" class="email" /><br /><br />
         </div>
 
         <div class="forLabel"><label for="password">Password: </label></div>
         <div class="forInput">
-          <input type="password" name="password" /><br /><br />
+          <input type="password" name="password" class="password" /><br /><br />
         </div>
 
-        <input type="submit" value="Sign In" />
+        <input type="submit" value="Sign In" class="signIn" />
       </form>
 
       <span class="forgotMsg"

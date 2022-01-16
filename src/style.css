@@ -59,7 +59,7 @@ button {
 /* menu */
 .navBar {
   background-color: var(--color-dark-blue);
-  padding: 30px 7rem;
+  padding: 30px 5rem;
 
   display: flex;
   justify-content: space-between;
@@ -97,7 +97,7 @@ button {
 
 .nav-account {
   line-height: 80px;
-  width: 35%;
+  width: 50%;
   display: flex;
   text-align: center;
   justify-content: space-evenly;
@@ -123,6 +123,8 @@ button {
 
 .account-container {
   font-size: var(--font-larger);
+  display: flex;
+  margin-left: 20px;
 }
 
 .account-container a {
@@ -131,6 +133,7 @@ button {
   color: var(--color-beige);
   display: inline-block;
   background-color: var(--color-normal-blue);
+  margin-right: 14px;
 }
 
 .account-container a:hover,
@@ -268,7 +271,7 @@ button {
   text-align: center;
 
   margin: auto;
-  max-width: 35%;
+  max-width: 45%;
   margin-top: 10rem;
 }
 
