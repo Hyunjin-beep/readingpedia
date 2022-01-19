@@ -27,7 +27,7 @@ const firebaseConfig = {
 
 // // Initialize Firebase
 const app = initializeApp(firebaseConfig)
-const database = getDatabase(app)
+// const database = getDatabase(app)
 const auth = getAuth()
 
 const name = document.querySelector('.fullName')
@@ -69,8 +69,8 @@ function SignUp() {
     createUserWithEmailAndPassword(auth, emailValue, passwordValue)
       .then(userCredential => {
         // Signed in
+        const database = getDatabase()
         const user = userCredential.user
-
         set(ref(database, 'users/' + user.uid), {
           FullName: fullName,
           Email: emailValue,
@@ -82,7 +82,7 @@ function SignUp() {
 
         alert('success')
       })
-
+      // .then((window.location.href = 'signIn.html'))
       .catch(error => {
         const errorCode = error.code
         const errorMessage = error.message
