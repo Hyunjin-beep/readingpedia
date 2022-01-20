@@ -78,6 +78,11 @@ function SignUp() {
           UserID: user.uid,
         })
 
+        set(ref(database, 'lists/' + user.uid), {
+          UserID: user.uid,
+          user_list: [],
+        })
+
         console.log(`${fullName}, ${emailValue}, ${nicknameValue}`)
 
         alert('success')

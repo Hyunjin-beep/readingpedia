@@ -4,15 +4,9 @@
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.6.3/firebase-app.js'
 import {
   getAuth,
-  createUserWithEmailAndPassword,
   onAuthStateChanged,
 } from 'https://www.gstatic.com/firebasejs/9.6.3/firebase-auth.js'
-import {
-  getDatabase,
-  ref,
-  set,
-  update,
-} from 'https://www.gstatic.com/firebasejs/9.6.3/firebase-database.js'
+import { getDatabase } from 'https://www.gstatic.com/firebasejs/9.6.3/firebase-database.js'
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -58,12 +52,25 @@ const apiKEY = 'a5bvxgKcuKEGoqTrnDOYoon74EqWIJAz'
 const nybestsellerslink =
   'https://api.nytimes.com/svc/books/v3/lists.json?list-name=hardcover-fiction&api-key='
 const googleBooks = 'https://www.googleapis.com/books/v1/volumes?q=isbn:'
+
 function fetchingBooksInfor() {
   return fetch(`${nybestsellerslink}${apiKEY}`, { method: 'get' })
     .then(response => {
       return response.json()
     })
     .then(json => json.results)
+}
+
+function fetchBookInforGoogle(isbn) {
+  if (isbn === '') {
+    console.log('no isbn in fetch ')
+  } else {
+    return fetch(`${googleBooks}${isbn}`, { method: 'get' })
+      .then(response => {
+        return response.json()
+      })
+      .then(json => displayBooks(json.items, isbn))
+  }
 }
 
 function sortingItem(item) {
@@ -102,19 +109,16 @@ function createItems(book_cover, title, isbn) {
   <span class="book-title">${title}</span>
 </div>`
 
+  item.addEventListener('click', () => {
+    directToDetailPage(isbn)
+  })
+
   return item
 }
 
-function fetchBookInforGoogle(isbn) {
-  if (isbn === '') {
-    console.log('no isbn in fetch ')
-  } else {
-    return fetch(`${googleBooks}${isbn}`, { method: 'get' })
-      .then(response => {
-        return response.json()
-      })
-      .then(json => displayBooks(json.items, isbn))
-  }
+function directToDetailPage(isbn) {
+  localStorage.setItem('isbn', isbn)
+  window.document.location = '../page/detail.html'
 }
 
 fetchingBooksInfor()
