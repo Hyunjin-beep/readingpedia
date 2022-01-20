@@ -2,7 +2,6 @@
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.6.3/firebase-app.js'
 import {
   getAuth,
-  signInWithEmailAndPassword,
   onAuthStateChanged,
 } from 'https://www.gstatic.com/firebasejs/9.6.3/firebase-auth.js'
 import {
@@ -27,27 +26,50 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig)
-const database = getDatabase()
+const database = getDatabase(app)
 const auth = getAuth()
-const user = auth.currentUser
 
 const userName = document.querySelector('.personal-name')
 
+const listBooksCotainer = document.querySelector('.in-stack-books')
+
 onAuthStateChanged(auth, user => {
   if (user) {
-    // User is signed in, see docs for a list of available properties
-    // https://firebase.google.com/docs/reference/js/firebase.User
     const dbref = ref(database)
     get(child(dbref, 'users/' + user.uid)).then(snapshot => {
       if (snapshot.exists()) {
-        console.log(snapshot.val().NickName)
         userName.innerText = `Hi, ${snapshot.val().NickName} `
+        displayLists(user.uid)
       } else {
-        console.log('no   ')
+        console.log('no   in onAuthStateChanged in personal.js')
       }
     })
-
-    console.log(user.uid)
-    // ...
   }
 })
+
+function displayLists(userID) {
+  // get data
+  const dbref = ref(database)
+  get(child(dbref, `lists/${userID}`)).then(snapshot => {
+    if (snapshot.exists()) {
+      const keys = Object.keys(snapshot.val())
+      const book_infor = keys.map(key => {
+        return snapshot.val()[key]
+      })
+
+      const bookelement = book_infor
+        .map(book => {
+          return `<div class="in-stack-grid-item personal-book-item">
+        <a href="detail.html"
+         ><img src="${book.book_cover_img}" alt="" class="reviewed-cover"
+       /></a>
+     </div>`
+        })
+        .join('')
+
+      listBooksCotainer.innerHTML = bookelement
+    } else {
+      console.log('no snap  ')
+    }
+  })
+}

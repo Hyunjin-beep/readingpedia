@@ -1,6 +1,5 @@
 ;('use strict')
 
-// Import the functions you need from the SDKs you need
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.6.3/firebase-app.js'
 import {
   getAuth,
@@ -9,14 +8,11 @@ import {
 import {
   getDatabase,
   update,
+  push,
   ref,
+  set,
 } from 'https://www.gstatic.com/firebasejs/9.6.3/firebase-database.js'
 
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
   apiKey: 'AIzaSyAi4A5QW-H3e5OfXPEuHIceIky7eWBaLkw',
   authDomain: 'readingpedia-8c5ac.firebaseapp.com',
@@ -29,6 +25,8 @@ const firebaseConfig = {
 
 // // Initialize Firebase
 const app = initializeApp(firebaseConfig)
+
+// Get a reference to the database service
 const database = getDatabase(app)
 const auth = getAuth()
 
@@ -47,14 +45,28 @@ function fetchBookDetails() {
     .then(json => json.items[0])
 }
 
-function addBookToList(event) {
+function addBookToList(event, item) {
   event.preventDefault()
   onAuthStateChanged(auth, user => {
     if (user) {
       const isbn = localStorage.getItem('isbn')
+      const today = new Date()
+      const todayDate = `${today.getFullYear()}-${
+        today.getMonth() + 1
+      }-${today.getDate()}`
 
-      const ref = ref(database, 'users/' + user.uid)
-      //https://stackoverflow.com/questions/66533350/add-new-item-to-realtime-database-array
+      console.log(item.volumeInfo.imageLinks)
+      const pageCount = item.volumeInfo.pageCount
+      const book_cover_img = item.volumeInfo.imageLinks.thumbnail
+
+      const postListRef = ref(database, `lists/${user.uid}`)
+      const newPostRef = push(postListRef)
+      set(newPostRef, {
+        isbn,
+        date: todayDate,
+        pageCount,
+        book_cover_img,
+      })
     } else {
       console.log('not signed in')
       window.location.href = 'signIn.html'
@@ -87,10 +99,9 @@ function displayBookDetails(item) {
 function init() {
   fetchBookDetails().then(item => {
     displayBookDetails(item)
-  })
-
-  add_my_list.addEventListener('click', event => {
-    addBookToList(event)
+    add_my_list.addEventListener('click', event => {
+      addBookToList(event, item)
+    })
   })
 }
 
