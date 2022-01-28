@@ -32,6 +32,9 @@ const auth = getAuth()
 const userName = document.querySelector('.personal-name')
 
 const listBooksCotainer = document.querySelector('.in-stack-books')
+const reviewedBooksContainer = document.querySelector('.reviewed-books')
+
+const book_height = document.querySelector('.personal-knowledge-hegiht')
 
 onAuthStateChanged(auth, user => {
   if (user) {
@@ -70,6 +73,41 @@ function displayLists(userID) {
       listBooksCotainer.innerHTML = bookelement
     } else {
       console.log('no snap  ')
+    }
+  })
+
+  get(child(dbref, `reviews/${userID}`)).then(snapshot => {
+    if (snapshot.exists()) {
+      const keys = Object.keys(snapshot.val())
+      const reviewed_book_infor = keys.map(key => {
+        return snapshot.val()[key]
+      })
+
+      const book_element = reviewed_book_infor
+        .map(book => {
+          return `<div class="reviewed-grid-item personal-book-item">
+        <a href="#"
+          ><img src=${book.book_cover_img} alt="" class="reviewed-cover"
+        /></a>
+      </div>`
+        })
+        .join('')
+
+      reviewedBooksContainer.innerHTML = book_element
+
+      const page_count = reviewed_book_infor
+        .map(book => {
+          return book.pageCount
+        })
+        .reduce((x, y) => {
+          return x + y
+        })
+
+      console.log(page_count)
+
+      book_height.innerText = `Your knowledge height is ${page_count} cm`
+    } else {
+      console.log('no')
     }
   })
 }

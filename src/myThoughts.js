@@ -64,13 +64,18 @@ function displayBookDetails(item) {
     </p>`
 }
 
-function saveReview() {
+function saveReview(item) {
   onAuthStateChanged(auth, user => {
     const isbn = localStorage.getItem('isbn')
+    const pageCount = item.volumeInfo.pageCount
+    const book_cover_img = item.volumeInfo.imageLinks.thumbnail
 
-    const reviewRef = ref(database, `reviews/${user.uid}/${isbn}`)
+    const reviewRef = ref(database, `reviews/${user.uid}`)
     const newReview = push(reviewRef)
     set(newReview, {
+      isbn,
+      pageCount,
+      book_cover_img,
       review: review.value,
     })
 
@@ -82,9 +87,9 @@ function saveReview() {
 function init() {
   fetchBookDetails().then(item => {
     displayBookDetails(item)
-  })
-  save_btn.addEventListener('click', event => {
-    saveReview()
+    save_btn.addEventListener('click', event => {
+      saveReview(item)
+    })
   })
 }
 
