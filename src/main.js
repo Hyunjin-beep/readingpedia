@@ -32,12 +32,8 @@ const personalBtn = document.querySelector('.personal-page')
 personalBtn.addEventListener('click', () => {
   onAuthStateChanged(auth, user => {
     if (user) {
-      // User is signed in, see docs for a list of available properties
-      // https://firebase.google.com/docs/reference/js/firebase.User
       window.location.href = 'personal.html'
     } else {
-      // User is signed out
-      // ...
       console.log('not signed in')
       window.location.href = 'signIn.html'
     }
@@ -46,6 +42,9 @@ personalBtn.addEventListener('click', () => {
 
 // Initialize element
 const bestseller_container = document.querySelector('.bestsellers')
+const search_form = document.querySelector('.search-container')
+const search_btn = document.querySelector('.search-button')
+const keyword_input = document.querySelector('.search-input')
 
 //Business Logics
 const apiKEY = 'a5bvxgKcuKEGoqTrnDOYoon74EqWIJAz'
@@ -121,8 +120,26 @@ function directToDetailPage(isbn) {
   window.document.location = '../page/detail.html'
 }
 
-fetchingBooksInfor()
-  .then(item => {
-    sortingItem(item)
+function saveKeyword() {
+  localStorage.setItem('keyword', keyword_input.value)
+  window.document.location = '../page/search.html'
+}
+
+function init() {
+  localStorage.clear()
+  fetchingBooksInfor()
+    .then(item => {
+      sortingItem(item)
+    })
+    .catch(console.log)
+
+  search_form.addEventListener('submit', () => {
+    saveKeyword()
   })
-  .catch(console.log)
+
+  search_btn.addEventListener('click', () => {
+    saveKeyword()
+  })
+}
+
+init()

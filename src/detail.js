@@ -77,9 +77,15 @@ function addBookToList(event, item) {
 function displayBookDetails(item) {
   console.log(item.volumeInfo.infoLink)
   const title = item.volumeInfo.title
-  const overview = item.volumeInfo.description
+  const overview =
+    item.volumeInfo.description !== undefined
+      ? item.volumeInfo.description
+      : 'No Information'
   const author = item.volumeInfo.authors[0]
-  const book_cover_img = item.volumeInfo.imageLinks.thumbnail
+  const book_cover_img =
+    item.volumeInfo.imageLinks !== undefined
+      ? item.volumeInfo.imageLinks['thumbnail']
+      : ''
   const purhcase_link = item.volumeInfo.infoLink
 
   const book_cover = document.createElement('img')
