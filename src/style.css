@@ -486,7 +486,16 @@ label {
   width: 70%;
 }
 
-.write-my-thoughts-container {
+.written-my-thoughts-container {
+  border: 1px solid black;
+}
+
+.my-thoughts {
+  font-size: var(--font-large);
+}
+
+.write-my-thoughts-container,
+.written-my-thoughts-container {
   width: 80%;
   margin: auto;
   text-align: center;
@@ -503,7 +512,8 @@ label {
   font-size: var(--font-large);
 }
 
-.review-submit {
+.review-submit,
+.my-thoughts-edit {
   margin-top: 3rem;
   padding: 12px 30px;
   border: none;
@@ -515,7 +525,8 @@ label {
 }
 
 .review-submit:hover,
-.review-buttons-container button:hover {
+.review-buttons-container button:hover,
+.my-thoughts-edit:hover {
   color: var(--grey-light-color);
   background-color: #4a64b1;
 }

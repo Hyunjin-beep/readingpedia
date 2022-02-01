@@ -102,9 +102,6 @@ function displayLists(userID) {
         .reduce((x, y) => {
           return x + y
         })
-
-      console.log(page_count)
-
       book_height.innerText = `Your knowledge height is ${page_count} cm`
     } else {
       console.log('no')
