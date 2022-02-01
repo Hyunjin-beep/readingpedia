@@ -78,12 +78,17 @@ function saveReview(item) {
   onAuthStateChanged(auth, user => {
     const pageCount = item.volumeInfo.pageCount
     const book_cover_img = item.volumeInfo.imageLinks.thumbnail
+    const today = new Date()
+    const todayDate = `${today.getFullYear()}-${String(
+      today.getMonth() + 1
+    ).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`
 
     set(ref(database, `reviews/${user.uid}/${isbn}`), {
       isbn,
       pageCount,
       book_cover_img,
       review: review.value,
+      todayDate,
     })
 
     review.value = ''
@@ -100,8 +105,6 @@ function retrieve_review_data() {
         snapshot => {
           if (snapshot.exists()) {
             showReview(snapshot.val())
-          } else {
-            console.log('dfd in retrieve')
           }
         }
       )
