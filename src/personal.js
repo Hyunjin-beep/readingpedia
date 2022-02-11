@@ -8,10 +8,7 @@ import {
   getDatabase,
   ref,
   get,
-  set,
   child,
-  update,
-  remove,
 } from 'https://www.gstatic.com/firebasejs/9.6.3/firebase-database.js'
 
 const firebaseConfig = {
@@ -86,7 +83,7 @@ function displayLists(userID) {
       const book_element = reviewed_book_infor
         .map(book => {
           return `<div class="reviewed-grid-item personal-book-item">
-        <a href="#"
+        <a href="myThoughts.html"
           ><img src=${book.book_cover_img} alt="" class="reviewed-cover"
         /></a>
       </div>`

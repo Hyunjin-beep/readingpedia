@@ -1,13 +1,17 @@
+'use strict'
 // Import the functions you need from the SDKs you need
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.6.3/firebase-app.js'
 import {
   getAuth,
-  signInWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged,
 } from 'https://www.gstatic.com/firebasejs/9.6.3/firebase-auth.js'
 import {
   getDatabase,
   ref,
   update,
+  get,
+  child,
 } from 'https://www.gstatic.com/firebasejs/9.6.3/firebase-database.js'
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -24,38 +28,44 @@ const firebaseConfig = {
   measurementId: 'G-7CKCCLQWG7',
 }
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig)
-const database = getDatabase()
 const auth = getAuth()
+const database = getDatabase(app)
 
-const email = document.querySelector('.email')
-const password = document.querySelector('.password')
-const signInBtn = document.querySelector('.signIn')
+const logOut = document.querySelector('.logout')
+const userNickName = document.querySelector('.user-nickname')
+const userEmail = document.querySelector('.user-email')
 
-signInBtn.addEventListener('click', e => {
-  e.preventDefault()
-  LogIn(email.value, password.value)
-  console.log(email.value, password.value)
-})
-
-function LogIn(email, password) {
-  signInWithEmailAndPassword(auth, email, password)
-    .then(userCredential => {
-      // Signed in
-      const user = userCredential.user
-
-      update(ref(database, 'users/' + user.uid), {
-        last_login: new Date(),
+function checkLogInStatus() {
+  onAuthStateChanged(auth, user => {
+    if (user) {
+      const dbref = ref(database)
+      get(child(dbref, 'users/' + user.uid)).then(snapshot => {
+        if (snapshot.exists()) {
+          userEmail.innerText = `${snapshot.val().Email}`
+          userNickName.innerText = `${snapshot.val().NickName}`
+        } else {
+          console.log('no   in onAuthStateChanged in setting.js')
+        }
       })
-
-      //  window.location.href = 'index.html'
-      alert('success' + user.uid)
-      // ...
-    })
-    .catch(error => {
-      const errorCode = error.code
-      const errorMessage = error.message
-      console.log(errorCode, errorMessage)
-    })
+    } else {
+      window.location = 'signIn.html'
+    }
+  })
 }
+
+function LogOut() {
+  signOut(auth)
+    .then(() => {
+      console.log('success')
+      window.location = 'index.html'
+    })
+    .catch(console.log)
+}
+
+function init() {
+  logOut.addEventListener('click', LogOut)
+  checkLogInStatus()
+}
+
+init()
