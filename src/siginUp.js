@@ -3,12 +3,12 @@ import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.6.3/firebase
 import {
   getAuth,
   createUserWithEmailAndPassword,
+  onAuthStateChanged,
 } from 'https://www.gstatic.com/firebasejs/9.6.3/firebase-auth.js'
 import {
   getDatabase,
   ref,
   set,
-  update,
 } from 'https://www.gstatic.com/firebasejs/9.6.3/firebase-database.js'
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -40,14 +40,6 @@ const signUpbtn = document.querySelector('.signUp')
 const form = document.querySelector('.sign-up-information')
 const inputs = document.querySelectorAll('.signUp-f')
 
-signUpbtn.addEventListener('click', e => {
-  e.preventDefault()
-
-  SignUp()
-  form.reset()
-  name.focus()
-})
-
 function SignUp() {
   const fullName = name.value
   const emailValue = email.value
@@ -67,24 +59,21 @@ function SignUp() {
     passwordValue !== ''
   ) {
     createUserWithEmailAndPassword(auth, emailValue, passwordValue)
-      .then(userCredential => {
+      .then(async userCredential => {
         // Signed in
         const user = userCredential.user
 
-        set(ref(database, 'users/' + user.uid), {
+        return set(ref(database, 'users/' + user.uid), {
           FullName: fullName,
           Email: emailValue,
           NickName: nicknameValue,
           UserID: user.uid,
         })
+      })
+      .then(() => {
+        alert('User Created')
 
-        // set(ref(database, 'lists/' + user.uid), {
-        //   books: [],
-        // })
-
-        console.log(`${fullName}, ${emailValue}, ${nicknameValue}`)
-
-        alert('success')
+        location.href = 'signIn.html'
       })
 
       .catch(error => {
@@ -96,3 +85,15 @@ function SignUp() {
       })
   }
 }
+
+function init() {
+  signUpbtn.addEventListener('click', event => {
+    event.preventDefault()
+
+    SignUp()
+    form.reset()
+    name.focus()
+  })
+}
+
+init()

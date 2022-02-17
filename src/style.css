@@ -601,3 +601,13 @@ label {
   width: 160px;
   height: 239px;
 }
+
+/* change Information */
+.change-information {
+  border: 1px solid black;
+  width: 100%;
+}
+
+.labelChange {
+  border: 1px solid black;
+}

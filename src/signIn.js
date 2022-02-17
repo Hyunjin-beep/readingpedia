@@ -3,6 +3,7 @@ import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.6.3/firebase
 import {
   getAuth,
   signInWithEmailAndPassword,
+  onAuthStateChanged,
 } from 'https://www.gstatic.com/firebasejs/9.6.3/firebase-auth.js'
 import {
   getDatabase,
@@ -33,25 +34,19 @@ const email = document.querySelector('.email')
 const password = document.querySelector('.password')
 const signInBtn = document.querySelector('.signIn')
 
-signInBtn.addEventListener('click', e => {
-  e.preventDefault()
-  LogIn(email.value, password.value)
-  console.log(email.value, password.value)
-})
-
 function LogIn(email, password) {
   signInWithEmailAndPassword(auth, email, password)
-    .then(userCredential => {
-      // Signed in
+    .then(async userCredential => {
       const user = userCredential.user
 
-      update(ref(database, 'users/' + user.uid), {
+      return update(ref(database, 'users/' + user.uid), {
         last_login: new Date(),
       })
+    })
+    .then(() => {
+      alert('Logged In')
 
-      //  window.location.href = 'index.html'
-      alert('success' + user.uid)
-      // ...
+      location.href = 'index.html'
     })
     .catch(error => {
       const errorCode = error.code
@@ -59,3 +54,12 @@ function LogIn(email, password) {
       console.log(errorCode, errorMessage)
     })
 }
+
+function init() {
+  signInBtn.addEventListener('click', e => {
+    e.preventDefault()
+    LogIn(email.value, password.value)
+  })
+}
+
+init()

@@ -9,15 +9,11 @@ import {
 import {
   getDatabase,
   ref,
-  update,
+  remove,
   get,
   child,
 } from 'https://www.gstatic.com/firebasejs/9.6.3/firebase-database.js'
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
   apiKey: 'AIzaSyAi4A5QW-H3e5OfXPEuHIceIky7eWBaLkw',
   authDomain: 'readingpedia-8c5ac.firebaseapp.com',
@@ -35,6 +31,7 @@ const database = getDatabase(app)
 const logOut = document.querySelector('.logout')
 const userNickName = document.querySelector('.user-nickname')
 const userEmail = document.querySelector('.user-email')
+const resetBtn = document.querySelector('.reset')
 
 function checkLogInStatus() {
   onAuthStateChanged(auth, user => {
@@ -45,7 +42,7 @@ function checkLogInStatus() {
           userEmail.innerText = `${snapshot.val().Email}`
           userNickName.innerText = `${snapshot.val().NickName}`
         } else {
-          console.log('no   in onAuthStateChanged in setting.js')
+          console.log('no in onAuthStateChanged in setting.js')
         }
       })
     } else {
@@ -63,9 +60,25 @@ function LogOut() {
     .catch(console.log)
 }
 
+function Reset() {
+  onAuthStateChanged(auth, user => {
+    if (user) {
+      remove(ref(database, `reviews/${user.uid}`))
+        .then(() => {
+          console.log('removed all')
+        })
+        .catch(error => {
+          console.log(error)
+        })
+    }
+  })
+}
+
 function init() {
   logOut.addEventListener('click', LogOut)
   checkLogInStatus()
+
+  resetBtn.addEventListener('click', Reset)
 }
 
 init()
