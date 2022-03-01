@@ -33,19 +33,21 @@ const reviewedBooksContainer = document.querySelector('.reviewed-books')
 
 const book_height = document.querySelector('.personal-knowledge-hegiht')
 
-onAuthStateChanged(auth, user => {
-  if (user) {
-    const dbref = ref(database)
-    get(child(dbref, 'users/' + user.uid)).then(snapshot => {
-      if (snapshot.exists()) {
-        userName.innerText = `Hi, ${snapshot.val().NickName} `
-        displayLists(user.uid)
-      } else {
-        console.log('no   in onAuthStateChanged in personal.js')
-      }
-    })
-  }
-})
+function onAuth() {
+  onAuthStateChanged(auth, user => {
+    if (user) {
+      const dbref = ref(database)
+      get(child(dbref, 'users/' + user.uid)).then(snapshot => {
+        if (snapshot.exists()) {
+          userName.innerText = `Hi, ${snapshot.val().NickName} `
+          displayLists(user.uid)
+        } else {
+          console.log('no   in onAuthStateChanged in personal.js')
+        }
+      })
+    }
+  })
+}
 
 function displayLists(userID) {
   // get data
@@ -105,3 +107,8 @@ function displayLists(userID) {
     }
   })
 }
+
+function init() {
+  onAuth()
+}
+init()
