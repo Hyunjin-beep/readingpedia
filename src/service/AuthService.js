@@ -1,6 +1,10 @@
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  onAuthStateChanged,
+  updateEmail,
+  updatePassword,
+  signOut,
 } from 'https://www.gstatic.com/firebasejs/9.6.3/firebase-auth.js'
 import { auth, database } from './Firebase.js'
 import {
@@ -18,6 +22,7 @@ export default class AuthService {
       })
       .then(userId => {
         alert('user created')
+        localStorage.setItem('userID', userId)
         this.saveUserData(userId, fullName, email, nickName)
       })
       .catch(error => {
@@ -39,7 +44,7 @@ export default class AuthService {
       })
       .then(userId => {
         alert('Logged In')
-        this.updateUserData(userId)
+        this.logInTime(userId)
       })
       .catch(error => {
         const errorCode = error.code
@@ -60,12 +65,45 @@ export default class AuthService {
     })
   }
 
-  updateUserData(userId) {
+  logInTime(userId) {
     update(ref(database, `users/${userId}`), {
       last_login: new Date(),
     }).then(() => {
       setTimeout(1000)
       location.href = 'index.html'
     })
+  }
+
+  async onAuthState(direct) {
+    onAuthStateChanged(auth, user => {
+      direct(user)
+    })
+  }
+
+  logOut() {
+    signOut(auth)
+      .then(() => {
+        location.href = 'signIn.html'
+      })
+      .catch(console.log)
+  }
+
+  updateUserInfor(root, item) {
+    update(ref(database, root), item).then(() => {
+      setTimeout(1000)
+      location.href = 'index.html'
+    })
+  }
+
+  updateChangedEmail(email) {
+    updateEmail(auth.currentUser, email).then(
+      alert('Email Changed Successfully')
+    )
+  }
+
+  updateChangedPwd(password) {
+    updatePassword(auth.currentUser, password).then(
+      alert('Password Changed Successfully')
+    )
   }
 }

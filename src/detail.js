@@ -1,81 +1,41 @@
 ;('use strict')
-
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.6.3/firebase-app.js'
-import {
-  getAuth,
-  onAuthStateChanged,
-} from 'https://www.gstatic.com/firebasejs/9.6.3/firebase-auth.js'
-import {
-  getDatabase,
-  update,
-  push,
-  ref,
-  set,
-} from 'https://www.gstatic.com/firebasejs/9.6.3/firebase-database.js'
-
-const firebaseConfig = {
-  apiKey: 'AIzaSyAi4A5QW-H3e5OfXPEuHIceIky7eWBaLkw',
-  authDomain: 'readingpedia-8c5ac.firebaseapp.com',
-  projectId: 'readingpedia-8c5ac',
-  storageBucket: 'readingpedia-8c5ac.appspot.com',
-  messagingSenderId: '100331426275',
-  appId: '1:100331426275:web:b0bcdc5a2abf9a5acc50d6',
-  measurementId: 'G-7CKCCLQWG7',
-}
-
-// // Initialize Firebase
-const app = initializeApp(firebaseConfig)
-
-// Get a reference to the database service
-const database = getDatabase(app)
-const auth = getAuth()
+import DB_Book from './service/DB_Book.js'
+import AuthService from './service/AuthService.js'
+import FetchBook from './service/Fetch_Book.js'
 
 const bookcover_img = document.querySelector('.book-cover-img')
 const book_metadata = document.querySelector('.book-metadata')
 const purchase_btn = document.querySelector('.purchase-button')
 const add_my_list = document.querySelector('.add-my-list')
-
-function fetchBookDetails() {
-  const googleBooks = 'https://www.googleapis.com/books/v1/volumes?q=isbn:'
-  const isbn = localStorage.getItem('isbn')
-  return fetch(`${googleBooks}${isbn}`, { method: 'get' })
-    .then(response => {
-      return response.json()
-    })
-    .then(json => json.items[0])
-}
+const review_btn = document.querySelector('.review-button')
+const userID = localStorage.getItem('userID')
+const fetchBook = new FetchBook()
+const db_book = new DB_Book()
+const authService = new AuthService()
 
 function addBookToList(event, item) {
   event.preventDefault()
-  onAuthStateChanged(auth, user => {
-    if (user) {
-      const isbn = localStorage.getItem('isbn')
-      const today = new Date()
-      const todayDate = `${today.getFullYear()}-${
-        today.getMonth() + 1
-      }-${today.getDate()}`
+  const isbn = localStorage.getItem('isbn')
+  const today = new Date()
+  const todayDate = `${today.getFullYear()}-${
+    today.getMonth() + 1
+  }-${today.getDate()}`
 
-      console.log(item.volumeInfo.imageLinks)
-      const pageCount = item.volumeInfo.pageCount
-      const book_cover_img = item.volumeInfo.imageLinks.thumbnail
+  console.log(item[0])
 
-      const postListRef = ref(database, `lists/${user.uid}`)
-      const newPostRef = push(postListRef)
-      set(newPostRef, {
-        isbn,
-        date: todayDate,
-        pageCount,
-        book_cover_img,
-      })
-    } else {
-      console.log('not signed in')
-      window.location.href = 'signIn.html'
-    }
-  })
+  const pageCount = item[0].volumeInfo.pageCount
+  const book_cover_img = item[0].volumeInfo.imageLinks.thumbnail
+  const bookData = {
+    isbn,
+    date: todayDate,
+    pageCount,
+    book_cover_img,
+  }
+
+  db_book.addToList(userID, bookData)
 }
 
 function displayBookDetails(item) {
-  console.log(item.volumeInfo.infoLink)
   const title = item.volumeInfo.title
   const overview =
     item.volumeInfo.description !== undefined
@@ -103,10 +63,33 @@ function displayBookDetails(item) {
 }
 
 function init() {
-  fetchBookDetails().then(item => {
-    displayBookDetails(item)
-    add_my_list.addEventListener('click', event => {
-      addBookToList(event, item)
+  const isbn = localStorage.getItem('isbn')
+
+  fetchBook.fetchGoogle(isbn).then(item => {
+    if (item) {
+      displayBookDetails(item[0])
+
+      add_my_list.addEventListener('click', event => {
+        authService.onAuthState(user => {
+          if (user) {
+            addBookToList(event, item)
+          } else {
+            alert('not signed in')
+            window.location.href = 'signIn.html'
+          }
+        })
+      })
+    }
+
+    review_btn.addEventListener('click', () => {
+      authService.onAuthState(user => {
+        if (user) {
+          window.location.href = 'myThoughts.html'
+        } else {
+          alert('not signed in')
+          window.location.href = 'signIn.html'
+        }
+      })
     })
   })
 }

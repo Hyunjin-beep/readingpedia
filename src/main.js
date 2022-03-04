@@ -1,80 +1,21 @@
 ;('use strict')
 
-// Import the functions you need from the SDKs you need
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.6.3/firebase-app.js'
-import {
-  getAuth,
-  onAuthStateChanged,
-} from 'https://www.gstatic.com/firebasejs/9.6.3/firebase-auth.js'
-import { getDatabase } from 'https://www.gstatic.com/firebasejs/9.6.3/firebase-database.js'
+import FetchBook from './service/Fetch_Book.js'
+import AuthService from './service/AuthService.js'
 
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: 'AIzaSyAi4A5QW-H3e5OfXPEuHIceIky7eWBaLkw',
-  authDomain: 'readingpedia-8c5ac.firebaseapp.com',
-  projectId: 'readingpedia-8c5ac',
-  storageBucket: 'readingpedia-8c5ac.appspot.com',
-  messagingSenderId: '100331426275',
-  appId: '1:100331426275:web:b0bcdc5a2abf9a5acc50d6',
-  measurementId: 'G-7CKCCLQWG7',
-}
-
-// // Initialize Firebase
-const app = initializeApp(firebaseConfig)
-const database = getDatabase(app)
-const auth = getAuth()
-
-const personalBtn = document.querySelector('.personal-page')
-personalBtn.addEventListener('click', () => {
-  onAuthStateChanged(auth, user => {
-    if (user) {
-      window.location.href = 'personal.html'
-    } else {
-      console.log('not signed in')
-      window.location.href = 'signIn.html'
-    }
-  })
-})
-
-// Initialize element
 const bestseller_container = document.querySelector('.bestsellers')
 const search_form = document.querySelector('.search-container')
-const search_btn = document.querySelector('.search-button')
 const keyword_input = document.querySelector('.search-input')
+const personalBtn = document.querySelector('.personal-page')
+
+const fetchBook = new FetchBook()
+const authService = new AuthService()
+// Initialize element
 
 //Business Logics
-const apiKEY = 'a5bvxgKcuKEGoqTrnDOYoon74EqWIJAz'
-const nybestsellerslink =
-  'https://api.nytimes.com/svc/books/v3/lists.json?list-name=hardcover-fiction&api-key='
-const googleBooks = 'https://www.googleapis.com/books/v1/volumes?q=isbn:'
-
-function fetchingBooksInfor() {
-  return fetch(`${nybestsellerslink}${apiKEY}`, { method: 'get' })
-    .then(response => {
-      return response.json()
-    })
-    .then(json => json.results)
-}
-
-function fetchBookInforGoogle(isbn) {
-  if (isbn === '') {
-    console.log('no isbn in fetch ')
-  } else {
-    return fetch(`${googleBooks}${isbn}`, { method: 'get' })
-      .then(response => {
-        return response.json()
-      })
-      .then(json => displayBooks(json.items, isbn))
-  }
-}
 
 function sortingItem(item) {
   for (let i = 0; i < item.length; i++) {
-    const bookInfor = item[i].book_details[0]
     let isbn = ''
     if (item[i].isbns[1] == undefined) {
       isbn = ''
@@ -82,14 +23,17 @@ function sortingItem(item) {
       isbn = item[i].isbns[1].isbn10
     }
 
-    fetchBookInforGoogle(isbn)
+    fetchBook
+      .fetchGoogle(isbn)
+      .then(item => {
+        displayBooks(item, isbn)
+      })
+      .catch(console.log)
   }
 }
 
 function displayBooks(bookInfor, isbn) {
-  if (bookInfor === undefined) {
-    console.log('no infor in dis')
-  } else {
+  if (bookInfor !== undefined) {
     const bestseller_title = bookInfor[0].volumeInfo.title
     const bestseller_book_cover =
       bookInfor[0].volumeInfo.imageLinks.smallThumbnail
@@ -109,36 +53,46 @@ function createItems(book_cover, title, isbn) {
 </div>`
 
   item.addEventListener('click', () => {
-    directToDetailPage(isbn)
+    directPage(isbn)
   })
 
   return item
 }
 
-function directToDetailPage(isbn) {
-  localStorage.setItem('isbn', isbn)
-  window.document.location = '../page/detail.html'
+function directPage(isbn) {
+  if (isbn !== undefined) {
+    localStorage.setItem('isbn', isbn)
+    window.document.location = '../page/detail.html'
+  } else {
+    localStorage.setItem('keyword', keyword_input.value)
+    window.document.location = '../page/search.html'
+  }
 }
 
-function saveKeyword() {
-  localStorage.setItem('keyword', keyword_input.value)
-  window.document.location = '../page/search.html'
+function userCheck(user) {
+  user
+    ? (window.location.href = 'personal.html')
+    : (window.location.href = 'signIn.html')
 }
 
 function init() {
-  localStorage.clear()
-  fetchingBooksInfor()
+  // localStorage.clear()
+
+  fetchBook
+    .fetchNYBook()
     .then(item => {
       sortingItem(item)
     })
     .catch(console.log)
 
   search_form.addEventListener('submit', () => {
-    saveKeyword()
+    directPage()
   })
 
-  search_btn.addEventListener('click', () => {
-    saveKeyword()
+  personalBtn.addEventListener('click', () => {
+    authService.onAuthState(user => {
+      userCheck(user)
+    })
   })
 }
 

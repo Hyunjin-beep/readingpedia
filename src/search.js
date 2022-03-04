@@ -1,17 +1,10 @@
-const googleBooks = 'https://www.googleapis.com/books/v1/volumes?q=intitle:'
-const result_container = document.querySelector('.search-result-grid-container')
+'use strict'
+import FetchBook from './service/Fetch_Book.js'
 
-function fetchBookResults() {
-  const keyword = localStorage.getItem('keyword')
-  localStorage.removeItem('keyword')
-  return fetch(`${googleBooks}${keyword}`, { method: 'get' }) //
-    .then(response => {
-      return response.json()
-    })
-    .then(json => {
-      return json.items
-    })
-}
+const result_container = document.querySelector('.search-result-grid-container')
+const fetchBook = new FetchBook()
+const keyword = localStorage.getItem('keyword')
+localStorage.removeItem('keyword')
 
 function displayItem(items) {
   items.map(item => {
@@ -58,13 +51,12 @@ function createItems(item) {
 
 function directToDetailPage(isbn) {
   localStorage.setItem('isbn', isbn)
-  window.document.location = '../page/detail.html'
+  location.href = 'detail.html'
 }
 
 function init() {
-  fetchBookResults().then(item => {
+  fetchBook.fetchGoolgeKeywords(keyword).then(item => {
     displayItem(item)
   })
-  // .catch(console.log)
 }
 init()

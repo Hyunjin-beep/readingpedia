@@ -1,34 +1,7 @@
 ;('use strict')
 
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.6.3/firebase-app.js'
-import {
-  getAuth,
-  onAuthStateChanged,
-} from 'https://www.gstatic.com/firebasejs/9.6.3/firebase-auth.js'
-import {
-  getDatabase,
-  child,
-  ref,
-  set,
-  get,
-} from 'https://www.gstatic.com/firebasejs/9.6.3/firebase-database.js'
-
-const firebaseConfig = {
-  apiKey: 'AIzaSyAi4A5QW-H3e5OfXPEuHIceIky7eWBaLkw',
-  authDomain: 'readingpedia-8c5ac.firebaseapp.com',
-  projectId: 'readingpedia-8c5ac',
-  storageBucket: 'readingpedia-8c5ac.appspot.com',
-  messagingSenderId: '100331426275',
-  appId: '1:100331426275:web:b0bcdc5a2abf9a5acc50d6',
-  measurementId: 'G-7CKCCLQWG7',
-}
-
-// // Initialize Firebase
-const app = initializeApp(firebaseConfig)
-
-// Get a reference to the database service
-const database = getDatabase(app)
-const auth = getAuth()
+import FetchBook from './service/Fetch_Book.js'
+import DB_Book from './service/DB_Book.js'
 
 const bookcover_img = document.querySelector('.book-cover-img')
 const book_metadata = document.querySelector('.book-metadata')
@@ -44,19 +17,12 @@ const review_container = document.querySelector('.my-thoughts')
 const edit_btn = document.querySelector('.my-thoughts-edit')
 
 const isbn = localStorage.getItem('isbn')
+const userID = localStorage.getItem('userID')
 
-function fetchBookDetails() {
-  const googleBooks = 'https://www.googleapis.com/books/v1/volumes?q=isbn:'
-  const isbn = localStorage.getItem('isbn')
-  return fetch(`${googleBooks}${isbn}`, { method: 'get' })
-    .then(response => {
-      return response.json()
-    })
-    .then(json => json.items[0])
-}
+const fetchBook = new FetchBook()
+const db_book = new DB_Book()
 
 function displayBookDetails(item) {
-  // console.log(item.volumeInfo.infoLink)
   const title = item.volumeInfo.title
   const overview = item.volumeInfo.description
   const author = item.volumeInfo.authors[0]
@@ -75,51 +41,34 @@ function displayBookDetails(item) {
 }
 
 function saveReview(item) {
-  onAuthStateChanged(auth, user => {
-    const pageCount = item.volumeInfo.pageCount
-    const book_cover_img = item.volumeInfo.imageLinks.thumbnail
-    const today = new Date()
-    const todayDate = `${today.getFullYear()}-${String(
-      today.getMonth() + 1
-    ).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`
+  const pageCount = item.volumeInfo.pageCount ? item.volumeInfo.pageCount : 0
+  const book_cover_img = item.volumeInfo.imageLinks.thumbnail
+  const today = new Date()
+  const todayDate = `${today.getFullYear()}-${String(
+    today.getMonth() + 1
+  ).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`
 
-    set(ref(database, `reviews/${user.uid}/${isbn}`), {
-      isbn,
-      pageCount,
-      book_cover_img,
-      review: review.value,
-      todayDate,
-    })
+  const review_data = {
+    isbn,
+    pageCount,
+    book_cover_img,
+    review: review.value,
+    todayDate,
+  }
 
-    review.value = ''
-    console.log('success')
-  })
+  db_book.saveReview(review_data, isbn)
+  review.value = ''
 
   window.location.reload()
 }
 
 function retrieve_review_data() {
-  onAuthStateChanged(auth, user => {
-    if (user) {
-      get(child(ref(database), `reviews/${user.uid}/${isbn}`)).then(
-        snapshot => {
-          if (snapshot.exists()) {
-            showReview(snapshot.val())
-          }
-        }
-      )
-
-      get(child(ref(database), `reviews/${user.uid}`)).then(snapshot => {
-        if (snapshot.exists()) {
-          if (isbn in snapshot.val()) {
-            written_review_container.style.display = 'none'
-            saved_review.style.display = 'block'
-          } else {
-            written_review_container.style.display = 'block'
-            saved_review.style.display = 'none'
-          }
-        }
-      })
+  db_book.get_data(`reviews/${userID}/${isbn}`, item => {
+    if (item) {
+      showReview(item)
+    } else {
+      console.log('nope')
+      saved_review.style.display = 'none'
     }
   })
 }
@@ -134,26 +83,16 @@ function editReview() {
   written_review_container.style.display = 'block'
   saved_review.style.display = 'none'
 
-  onAuthStateChanged(auth, user => {
-    if (user) {
-      get(child(ref(database), `reviews/${user.uid}/${isbn}`)).then(
-        snapshot => {
-          if (snapshot.exists()) {
-            review.innerText = snapshot.val().review
-          } else {
-            console.log('dfd in edit')
-          }
-        }
-      )
-    }
+  db_book.get_data(`reviews/${userID}/${isbn}`, item => {
+    item && (review.innerText = item.review)
   })
 }
 
 function init() {
-  fetchBookDetails().then(item => {
-    displayBookDetails(item)
+  fetchBook.fetchGoogle(isbn).then(item => {
+    displayBookDetails(item[0])
     save_btn.addEventListener('click', () => {
-      saveReview(item)
+      saveReview(item[0])
     })
   })
 

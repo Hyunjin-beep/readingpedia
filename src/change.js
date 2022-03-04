@@ -1,34 +1,7 @@
 'use strict'
-// Import the functions you need from the SDKs you need
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.6.3/firebase-app.js'
-import {
-  getAuth,
-  updateEmail,
-  updatePassword,
-  onAuthStateChanged,
-  signOut,
-} from 'https://www.gstatic.com/firebasejs/9.6.3/firebase-auth.js'
-import {
-  getDatabase,
-  ref,
-  get,
-  update,
-  child,
-} from 'https://www.gstatic.com/firebasejs/9.6.3/firebase-database.js'
 
-const firebaseConfig = {
-  apiKey: 'AIzaSyAi4A5QW-H3e5OfXPEuHIceIky7eWBaLkw',
-  authDomain: 'readingpedia-8c5ac.firebaseapp.com',
-  projectId: 'readingpedia-8c5ac',
-  storageBucket: 'readingpedia-8c5ac.appspot.com',
-  messagingSenderId: '100331426275',
-  appId: '1:100331426275:web:b0bcdc5a2abf9a5acc50d6',
-  measurementId: 'G-7CKCCLQWG7',
-}
-
-const app = initializeApp(firebaseConfig)
-const auth = getAuth()
-const database = getDatabase(app)
+import AuthService from './service/AuthService.js'
+import DB_Book from './service/DB_Book.js'
 
 const nameInput = document.querySelector('.fullName')
 const emailInput = document.querySelector('.email')
@@ -36,56 +9,45 @@ const nickNameInput = document.querySelector('.nickName')
 const passwordInput = document.querySelector('.password')
 const changeBtn = document.querySelector('.changeBtn')
 
-function DisplayData() {
-  onAuthStateChanged(auth, user => {
-    if (user) {
-      const dbref = ref(database)
-      get(child(dbref, `users/${user.uid}`)).then(snapshot => {
-        if (snapshot.exists()) {
-          nameInput.value = snapshot.val().FullName
-          emailInput.value = snapshot.val().Email
-          nickNameInput.value = snapshot.val().NickName
-        } else {
-          console.log('no in displayData in change')
-        }
-      })
+const userID = localStorage.getItem('userID')
+
+const db_book = new DB_Book()
+const authService = new AuthService()
+
+function displayData() {
+  db_book.get_data(`users/${userID}`, snapshot => {
+    if (snapshot) {
+      nameInput.value = snapshot.FullName
+      emailInput.value = snapshot.Email
+      nickNameInput.value = snapshot.NickName
+    } else {
+      alert('No Information')
+      location.href = 'signIn.html'
     }
   })
 }
 
-function ChangeInfor(event) {
+function changeInfor(event) {
+  event.preventDefault()
   const changedName = nameInput.value
   const changedEmail = emailInput.value
   const changedNickName = nickNameInput.value
   const changedPassword = passwordInput.value
 
-  const user = auth.currentUser
-
-  event.preventDefault()
-  update(ref(database, `users/${user.uid}`), {
+  const user_infor = {
     FullName: changedName,
     Email: changedEmail,
     NickName: changedNickName,
-  })
-
-  updateEmail(user, `${changedEmail}`)
-    .then(console.log('ok with email'))
-    .catch(error => console.log(error))
-  updatePassword(user, changedPassword)
-    .then(console.log('ok with password'))
-    .catch(error => console.log(error))
-
-  signOut(auth)
-    .then(() => {
-      window.location = 'signIn.html'
-    })
-    .catch(console.log)
+  }
+  authService.updateUserInfor(`users/${userID}`, user_infor)
+  authService.updateChangedEmail(changedEmail)
+  authService.updateChangedEmail(changedPassword)
 }
 
 function init() {
-  DisplayData()
+  displayData()
   changeBtn.addEventListener('click', event => {
-    ChangeInfor(event)
+    changeInfor(event)
   })
 }
 
