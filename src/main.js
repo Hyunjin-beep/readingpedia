@@ -7,14 +7,27 @@ const bestseller_container = document.querySelector('.bestsellers')
 const search_form = document.querySelector('.search-container')
 const keyword_input = document.querySelector('.search-input')
 const personalBtn = document.querySelector('.personal-page')
+const categories = [
+  'art',
+  'music',
+  'romance',
+  'fiction',
+  'POETRY',
+  'DESIGN',
+  'DARAMA',
+  'SCIENCE',
+  'GARDENING',
+  'BUSINESS&ECONOMICS',
+  'HISTORY',
+  'crime',
+]
+
+const randomCate = randomCategories()
 
 const fetchBook = new FetchBook()
 const authService = new AuthService()
-// Initialize element
 
-//Business Logics
-
-function sortingItem(item) {
+function sortingNYItem(item) {
   for (let i = 0; i < item.length; i++) {
     let isbn = ''
     if (item[i].isbns[1] == undefined) {
@@ -42,6 +55,16 @@ function displayBooks(bookInfor, isbn) {
   }
 }
 
+function displayGenreBooks(item) {
+  for (let i = 0; i < item.length; i++) {
+    const title = item[i].volumeInfo.title
+    const book_cover = item[i].volumeInfo.imageLinks
+      ? item[i].volumeInfo.imageLinks.smallThumbnail
+      : ''
+    const item_row = createGenreItems(title, book_cover)
+  }
+}
+
 function createItems(book_cover, title, isbn) {
   const item = document.createElement('li')
   item.setAttribute('class', 'bestseller')
@@ -59,6 +82,8 @@ function createItems(book_cover, title, isbn) {
   return item
 }
 
+function createGenreItems(title, book_cover) {}
+
 function directPage(isbn) {
   if (isbn !== undefined) {
     localStorage.setItem('isbn', isbn)
@@ -75,15 +100,39 @@ function userCheck(user) {
     : (window.location.href = 'signIn.html')
 }
 
+function randomCategories() {
+  let arr = []
+  while (arr.length < 5) {
+    let r = Math.floor(Math.random() * (categories.length - 1)) + 1
+    if (arr.indexOf(r) === -1) {
+      arr.push(r)
+    }
+  }
+
+  let randomCate = []
+
+  for (let i = 0; i < arr.length; i++) {
+    randomCate.push(categories[arr[i]])
+  }
+
+  return randomCate
+}
+
 function init() {
   // localStorage.clear()
 
   fetchBook
     .fetchNYBook()
     .then(item => {
-      sortingItem(item)
+      sortingNYItem(item)
     })
     .catch(console.log)
+
+  for (let i = 0; i < randomCate.length; i++) {
+    fetchBook.fetchGoogleGenre(randomCate[i]).then(item => {
+      displayGenreBooks(item)
+    })
+  }
 
   search_form.addEventListener('submit', () => {
     directPage()
