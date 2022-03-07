@@ -7,19 +7,18 @@ const bestseller_container = document.querySelector('.bestsellers')
 const search_form = document.querySelector('.search-container')
 const keyword_input = document.querySelector('.search-input')
 const personalBtn = document.querySelector('.personal-page')
+const genreContainerTop = document.querySelector('.genre-container-top')
 const categories = [
-  'art',
-  'music',
-  'romance',
-  'fiction',
-  'POETRY',
-  'DESIGN',
-  'DARAMA',
-  'SCIENCE',
-  'GARDENING',
-  'BUSINESS&ECONOMICS',
-  'HISTORY',
-  'crime',
+  'Art',
+  'Music',
+  'Romance',
+  'Fiction',
+  'Poetry',
+  'Drama',
+  'Science',
+  'History',
+  'Crime',
+  'Nature',
 ]
 
 const randomCate = randomCategories()
@@ -55,16 +54,6 @@ function displayBooks(bookInfor, isbn) {
   }
 }
 
-function displayGenreBooks(item) {
-  for (let i = 0; i < item.length; i++) {
-    const title = item[i].volumeInfo.title
-    const book_cover = item[i].volumeInfo.imageLinks
-      ? item[i].volumeInfo.imageLinks.smallThumbnail
-      : ''
-    const item_row = createGenreItems(title, book_cover)
-  }
-}
-
 function createItems(book_cover, title, isbn) {
   const item = document.createElement('li')
   item.setAttribute('class', 'bestseller')
@@ -82,11 +71,61 @@ function createItems(book_cover, title, isbn) {
   return item
 }
 
-function createGenreItems(title, book_cover) {}
+function wrappingTop(item, category) {
+  const section = document.createElement('section')
+  section.setAttribute('class', 'books-container')
+  section.innerHTML = `<div class="genre-title books-title"><h3>${category}</h3></div>`
 
-function directPage(isbn) {
-  if (isbn !== undefined) {
-    localStorage.setItem('isbn', isbn)
+  const attributes = displayGenreBooks(item, category)
+  const div = document.createElement('div')
+  div.setAttribute('class', 'books-list')
+  div.appendChild(attributes)
+
+  section.appendChild(div)
+  genreContainerTop.appendChild(section)
+}
+
+function displayGenreBooks(items, category) {
+  const list = document.createElement('ul')
+  list.setAttribute('class', 'genre-books')
+
+  items.map(item => {
+    const title = item.volumeInfo.title
+    const book_cover = item.volumeInfo.imageLinks
+      ? item.volumeInfo.imageLinks.smallThumbnail
+      : ''
+    const listItem = createGenreItems(title, book_cover, item.id, category)
+    list.appendChild(listItem)
+    return listItem
+  })
+
+  return list
+}
+
+function createGenreItems(title, book_cover, id, category) {
+  const item = document.createElement('li')
+  item.setAttribute('class', 'genre-book')
+  item.innerHTML = `<div class="book-container">
+  <a href="detail.html" class="img-cover"
+    ><img src=${book_cover} alt=""
+  /></a>
+  <span class="book-title"
+    >${title}</span
+  >
+</div>`
+
+  item.addEventListener('click', () => {
+    directPage(id, category)
+  })
+
+  return item
+}
+
+function directPage(id, category) {
+  if (id !== undefined) {
+    category = category !== undefined ? category : null
+    localStorage.setItem('category', category)
+    localStorage.setItem('isbn', id)
     window.document.location = '../page/detail.html'
   } else {
     localStorage.setItem('keyword', keyword_input.value)
@@ -108,7 +147,6 @@ function randomCategories() {
       arr.push(r)
     }
   }
-
   let randomCate = []
 
   for (let i = 0; i < arr.length; i++) {
@@ -130,7 +168,7 @@ function init() {
 
   for (let i = 0; i < randomCate.length; i++) {
     fetchBook.fetchGoogleGenre(randomCate[i]).then(item => {
-      displayGenreBooks(item)
+      wrappingTop(item, randomCate[i])
     })
   }
 

@@ -39,9 +39,13 @@ export default class FetchBook {
   }
 
   async fetchGoogleGenre(genre) {
-    const response = await fetch(`${GOOGLEBOOKSGENRE}${genre}`, {
-      method: `get`,
-    })
+    const start = Math.floor(Math.random() * 160)
+    const response = await fetch(
+      `${GOOGLEBOOKSGENRE}${genre}&startIndex=${start}&maxResults=25`,
+      {
+        method: `get`,
+      }
+    )
     const json = await response.json()
     return json.items
   }
