@@ -84,7 +84,7 @@ button {
 
 .nav-menu a {
   color: var(--color-beige);
-  margin-right: calc(var(--padding) * 5);
+  /* margin-right: calc(var(--padding) * 5); */
   display: inline-block;
   transition: ease-in-out 300ms;
 }
@@ -138,6 +138,10 @@ button {
 .search-button:hover {
   color: var(--grey-light-color);
   background-color: #4a64b1;
+}
+
+.account_midea {
+  display: none;
 }
 
 .custom-shape-divider-bottom-1641738998 {
@@ -226,7 +230,7 @@ button {
 .grid-item {
   max-width: 800px;
   height: 250px;
-  border: 1px solid black;
+
   margin-bottom: 20px;
 }
 
@@ -361,9 +365,9 @@ label {
   border-bottom: 1px solid var(--grey-dark-color);
 }
 
-.personal-infor-name-level span {
+/* .personal-infor-name-level span {
   margin-right: 4rem;
-}
+} */
 
 .personal-name {
   font-weight: 800;
@@ -408,7 +412,6 @@ label {
 }
 
 .personal-book-item {
-  border: 1px solid red;
   width: 107px;
   height: 160px;
   margin-bottom: 3rem;
@@ -620,14 +623,70 @@ label {
   border: 1px solid black;
 }
 
-@media screen and (max-width: 1300px) {
+@media screen and (max-width: 900px) {
   .navBar {
+    flex-direction: column;
+    padding: 30px;
+    margin: auto;
+  }
+
+  .nav-home,
+  .search-container,
+  .nav-account {
+    text-align: center;
+  }
+
+  .nav-menu {
     flex-direction: column;
   }
 
+  .account-container {
+    display: none;
+  }
+
+  .account_midea {
+    display: block;
+    width: 100%;
+    margin-top: 3rem;
+  }
+
+  .account_nav_menu {
+    text-align: center;
+  }
+
+  .account_nav_menu a {
+    text-decoration: none;
+    color: var(--color-beige);
+    font-size: var(--font-large);
+  }
+
+  .account_nav_menu li {
+    margin-bottom: 2em;
+    border: 1px solid var(--grey-light-color);
+  }
+
+  .account_nav_menu li:hover {
+    font-weight: bold;
+  }
+
+  /* search */
+  .search-result-grid-container {
+    display: block;
+    padding: 0px;
+  }
+
+  /* detail */
   .book-detail-container {
     display: flex;
     flex-direction: column;
+  }
+  .book-metadata {
+    width: 100%;
+  }
+
+  .book-overview {
+    margin-top: 2rem;
+    width: 100%;
   }
 
   .book-detail-container .book-cover-img,
@@ -638,5 +697,63 @@ label {
 
   .author_title {
     text-align: center;
+  }
+
+  .review-buttons-container button {
+    margin-right: 0px;
+  }
+
+  .recommendations {
+    display: block;
+  }
+
+  .recommendation {
+    margin-bottom: 2rem;
+  }
+
+  .recommendation a {
+    height: 200px;
+  }
+
+  /* personal */
+  .personal-name {
+    text-align: center;
+  }
+
+  .my-books-container {
+    flex-direction: column;
+    margin: 2em 1em;
+  }
+
+  .my-books-container div {
+    width: 100%;
+  }
+
+  .my-books-list {
+    grid-template-columns: repeat(2, 1fr);
+    padding: 0;
+  }
+
+  .personal-book-item {
+    margin-right: 0;
+  }
+
+  .reviewed-cover {
+    width: 90%;
+    height: 100%;
+  }
+
+  /* setting */
+  .manage-information {
+    margin: 5rem 0;
+  }
+
+  .form-container {
+    margin: 5rem 1rem;
+    max-width: 90%;
+  }
+
+  .sign-up-information {
+    width: 100%;
   }
 }

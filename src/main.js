@@ -7,6 +7,7 @@ const bestseller_container = document.querySelector('.bestsellers')
 const search_form = document.querySelector('.search-container')
 const keyword_input = document.querySelector('.search-input')
 const personalBtn = document.querySelector('.personal-page')
+const personalBtnMedia = document.querySelector('.personal-page-media')
 const genreContainerTop = document.querySelector('.genre-container-top')
 const categories = [
   'Art',
@@ -174,6 +175,12 @@ function init() {
 
   search_form.addEventListener('submit', () => {
     directPage()
+  })
+
+  personalBtnMedia.addEventListener('click', () => {
+    authService.onAuthState(user => {
+      userCheck(user)
+    })
   })
 
   personalBtn.addEventListener('click', () => {
