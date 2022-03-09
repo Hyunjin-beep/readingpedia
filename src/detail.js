@@ -129,23 +129,21 @@ function directPage(id, category) {
 
 function init() {
   const isbn = localStorage.getItem('isbn')
+
   if (isbn.length !== 10) {
     fetchBook.fetchGoogleID(isbn).then(item => {
-      console.log(item)
       displayAndBtn(item)
     })
   } else {
     fetchBook.fetchGoogle(isbn).then(item => {
-      console.log(item)
+      localStorage.setItem('category', item[0].volumeInfo.categories[0])
       displayAndBtn(item[0])
     })
   }
 
-  if (category !== undefined) {
-    fetchBook.fetchGoogleGenre(category).then(item => {
-      displayRecommendation(item)
-    })
-  }
+  fetchBook.fetchGoogleGenre(category).then(item => {
+    displayRecommendation(item)
+  })
 }
 
 init()

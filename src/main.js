@@ -66,7 +66,7 @@ function createItems(book_cover, title, isbn) {
 </div>`
 
   item.addEventListener('click', () => {
-    directPage(isbn)
+    directPage(isbn, 'Fiction')
   })
 
   return item
@@ -123,9 +123,9 @@ function createGenreItems(title, book_cover, id, category) {
 }
 
 function directPage(id, category) {
+  category = category !== undefined ? category : null
+  localStorage.setItem('category', category)
   if (id !== undefined) {
-    category = category !== undefined ? category : null
-    localStorage.setItem('category', category)
     localStorage.setItem('isbn', id)
     window.document.location = '../page/detail.html'
   } else {
