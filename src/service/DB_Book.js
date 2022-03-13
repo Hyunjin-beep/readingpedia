@@ -10,10 +10,13 @@ import {
 } from 'https://www.gstatic.com/firebasejs/9.6.3/firebase-database.js'
 
 export default class DB_Book {
-  addToList(userID, item) {
-    const listRef = ref(database, `lists/${userID}`)
-    const itemRef = push(listRef)
-    set(itemRef, item)
+  addToList(userID, item, isbn) {
+    set(ref(database, `lists/${userID}/${isbn}`), item)
+  }
+
+  check_added(userID, isbn, check) {
+    get(child(ref(database), `lists/${userID}/${isbn}`)) ///
+      .then(snapshot => check(snapshot.val()))
   }
 
   saveReview(item, isbn) {
@@ -32,6 +35,14 @@ export default class DB_Book {
     remove(ref(database, root))
       .then(() => {
         alert('Removed All')
+      })
+      .catch(console.log)
+  }
+
+  removeOne(root) {
+    remove(ref(database, root))
+      .then(() => {
+        alert('Deleted')
       })
       .catch(console.log)
   }

@@ -30,7 +30,6 @@ export default class AuthService {
         const errorMessage = error.message
 
         console.log(errorCode, errorMessage)
-        // ..
       })
 
     return user

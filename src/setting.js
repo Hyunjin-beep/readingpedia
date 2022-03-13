@@ -9,6 +9,9 @@ const userEmail = document.querySelector('.user-email')
 const resetBtn = document.querySelector('.reset')
 const userID = localStorage.getItem('userID')
 
+const personalBtn = document.querySelector('.personal-page')
+const personalBtnMedia = document.querySelector('.personal-page-media')
+
 const authService = new AuthService()
 const db_book = new DB_Book()
 
@@ -28,11 +31,29 @@ function reset() {
   db_book.remove(`reviews/${userID}`)
 }
 
+function userCheck(user) {
+  user
+    ? (window.location.href = 'personal.html')
+    : (window.location.href = 'signIn.html')
+}
+
 function init() {
   logOut.addEventListener('click', authService.logOut)
   checkLogInStatus()
 
   resetBtn.addEventListener('click', reset)
+
+  personalBtnMedia.addEventListener('click', () => {
+    authService.onAuthState(user => {
+      userCheck(user)
+    })
+  })
+
+  personalBtn.addEventListener('click', () => {
+    authService.onAuthState(user => {
+      userCheck(user)
+    })
+  })
 }
 
 init()

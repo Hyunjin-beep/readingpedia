@@ -14,6 +14,7 @@ const save_btn = document.querySelector('.review-submit')
 
 const saved_review = document.querySelector('.written-my-thoughts-container')
 const review_container = document.querySelector('.my-thoughts')
+const review_date = document.querySelector('.review-date')
 const edit_btn = document.querySelector('.my-thoughts-edit')
 
 const isbn = localStorage.getItem('isbn')
@@ -76,7 +77,9 @@ function retrieve_review_data() {
 function showReview(snapshot) {
   written_review_container.style.display = 'none'
   const review = snapshot.review
+  console.log(snapshot.todayDate)
   review_container.innerText = review
+  review_date.innerText = snapshot.todayDate
 }
 
 function editReview() {

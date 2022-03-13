@@ -4,7 +4,8 @@ import FetchBook from './service/Fetch_Book.js'
 const result_container = document.querySelector('.search-result-grid-container')
 const fetchBook = new FetchBook()
 const keyword = localStorage.getItem('keyword')
-localStorage.removeItem('keyword')
+const keyword_input = document.querySelector('.search-input')
+const form = document.querySelector('.search-container')
 
 function displayItem(items) {
   items.map(item => {
@@ -15,7 +16,9 @@ function displayItem(items) {
 
 function createItems(item) {
   const isbn = item.volumeInfo.industryIdentifiers[0]['identifier']
-  const author = item.volumeInfo.authors[0]
+  const author = item.volumeInfo.authors
+    ? item.volumeInfo.authors[0]
+    : 'no data'
   const title = item.volumeInfo.title
   const publishDate =
     item.volumeInfo.publishedDate !== undefined
@@ -55,7 +58,13 @@ function directToDetailPage(isbn) {
 }
 
 function init() {
+  form.addEventListener('submit', event => {
+    localStorage.setItem('keyword', keyword_input.value)
+  })
+
   fetchBook.fetchGoolgeKeywords(keyword).then(item => {
+    console.log(keyword)
+    console.log(item)
     displayItem(item)
   })
 }

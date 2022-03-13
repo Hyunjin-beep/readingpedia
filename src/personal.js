@@ -6,6 +6,10 @@ const userName = document.querySelector('.personal-name')
 const listBooksCotainer = document.querySelector('.in-stack-books')
 const reviewedBooksContainer = document.querySelector('.reviewed-books')
 const book_height = document.querySelector('.personal-knowledge-hegiht')
+
+const personalBtn = document.querySelector('.personal-page')
+const personalBtnMedia = document.querySelector('.personal-page-media')
+
 const userID = localStorage.getItem('userID')
 
 const db_book = new DB_Book()
@@ -79,6 +83,12 @@ function displayLists(userID) {
   })
 }
 
+function userCheck(user) {
+  user
+    ? (window.location.href = 'personal.html')
+    : (window.location.href = 'signIn.html')
+}
+
 function init() {
   if (localStorage.getItem('userID') !== null) {
     onAuth()
@@ -86,6 +96,18 @@ function init() {
     alert('No Accounts')
     location.href = 'signIn.html'
   }
+
+  personalBtnMedia.addEventListener('click', () => {
+    authService.onAuthState(user => {
+      userCheck(user)
+    })
+  })
+
+  personalBtn.addEventListener('click', () => {
+    authService.onAuthState(user => {
+      userCheck(user)
+    })
+  })
 }
 
 init()

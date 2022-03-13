@@ -10,8 +10,12 @@ const add_my_list = document.querySelector('.add-my-list')
 const review_btn = document.querySelector('.review-button')
 const recommendations_container = document.querySelector('.recommendations')
 
+const personalBtn = document.querySelector('.personal-page')
+const personalBtnMedia = document.querySelector('.personal-page-media')
+
 const userID = localStorage.getItem('userID')
 const category = localStorage.getItem('category')
+const isbn = localStorage.getItem('isbn')
 
 const fetchBook = new FetchBook()
 const db_book = new DB_Book()
@@ -19,14 +23,17 @@ const authService = new AuthService()
 
 function addBookToList(event, item) {
   event.preventDefault()
-  const isbn = localStorage.getItem('isbn')
+
   const today = new Date()
   const todayDate = `${today.getFullYear()}-${
     today.getMonth() + 1
   }-${today.getDate()}`
 
   const pageCount = item.volumeInfo.pageCount
-  const book_cover_img = item.volumeInfo.imageLinks.thumbnail
+  const book_cover_img =
+    item.volumeInfo.imageLinks !== undefined
+      ? item.volumeInfo.imageLinks.thumbnail
+      : null
   const bookData = {
     isbn,
     date: todayDate,
@@ -34,7 +41,13 @@ function addBookToList(event, item) {
     book_cover_img,
   }
 
-  db_book.addToList(userID, bookData)
+  db_book.addToList(userID, bookData, isbn)
+  alert('Sucess to add!')
+  add_my_list.innerHTML = `Deleted From my list`
+}
+
+function deletedFromList() {
+  db_book.removeOne(`lists/${userID}/${isbn}`)
 }
 
 function displayBookDetails(item) {
@@ -70,7 +83,14 @@ function displayAndBtn(item) {
   add_my_list.addEventListener('click', event => {
     authService.onAuthState(user => {
       if (user) {
-        addBookToList(event, item)
+        db_book.check_added(userID, isbn, snapshot => {
+          if (snapshot) {
+            deletedFromList()
+            add_my_list.innerHTM = 'Add To List'
+          } else {
+            addBookToList(event, item)
+          }
+        })
       } else {
         alert('not signed in')
         window.location.href = 'signIn.html'
@@ -127,8 +147,16 @@ function directPage(id, category) {
   window.document.location = '../page/detail.html'
 }
 
+function userCheck(user) {
+  user
+    ? (window.location.href = 'personal.html')
+    : (window.location.href = 'signIn.html')
+}
+
 function init() {
-  const isbn = localStorage.getItem('isbn')
+  db_book.check_added(userID, isbn, snapshot => {
+    add_my_list.innerHTML = snapshot ? 'Deleted From List' : 'Add To List'
+  })
 
   if (isbn.length !== 10) {
     fetchBook.fetchGoogleID(isbn).then(item => {
@@ -143,6 +171,18 @@ function init() {
 
   fetchBook.fetchGoogleGenre(category).then(item => {
     displayRecommendation(item)
+  })
+
+  personalBtnMedia.addEventListener('click', () => {
+    authService.onAuthState(user => {
+      userCheck(user)
+    })
+  })
+
+  personalBtn.addEventListener('click', () => {
+    authService.onAuthState(user => {
+      userCheck(user)
+    })
   })
 }
 

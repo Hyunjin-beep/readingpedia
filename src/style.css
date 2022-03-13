@@ -275,6 +275,7 @@ button {
   margin: auto;
   max-width: 45%;
   margin-top: 10rem;
+  margin-bottom: 10rem;
 }
 
 .sign-in-container {
@@ -407,7 +408,6 @@ label {
 .my-books-list {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-
   padding: 2rem 4rem;
 }
 
@@ -426,7 +426,7 @@ label {
 /* setting */
 .manage-information {
   text-align: center;
-  margin-top: 15rem;
+  margin: 10rem;
   font-size: calc(var(--font-larger) * 0.8);
   color: var(--color-dark-black);
 }
@@ -573,7 +573,8 @@ label {
   cursor: pointer;
 }
 
-.review-buttons-container button a {
+.review-buttons-container button a,
+.review-buttons-container button {
   color: var(--color-beige);
 }
 
@@ -623,7 +624,7 @@ label {
   border: 1px solid black;
 }
 
-@media screen and (max-width: 900px) {
+@media screen and (max-width: 1000px) {
   .navBar {
     flex-direction: column;
     padding: 30px;
@@ -755,5 +756,6 @@ label {
 
   .sign-up-information {
     width: 100%;
+    margin-bottom: 5rem;
   }
 }
